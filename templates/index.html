@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Answer Checker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1>Math Answer Checker</h1>
+    
+    {% if session.step == 'select_limit' %}
+        <form method="POST">
+            <label>Select session limit:</label>
+            <select name="limit">
+                <option value="5">5 inputs</option>
+                <option value="10">10 inputs</option>
+                <option value="20">20 inputs</option>
+            </select>
+            <button type="submit">Start Session</button>
+        </form>
+    {% elif session.step == 'input_equation' %}
+        <p>Inputs used: {{ session.count }} / {{ session.limit }}</p>
+        <form method="POST">
+            <label>Enter equation:</label>
+            <input type="text" name="equation" placeholder="e.g., 2 + 3 or x + 1 = 3" required>
+            <button type="submit">Submit Equation</button>
+        </form>
+    {% elif session.step == 'input_answer' %}
+        <p>Equation: {{ session.equation }}</p>
+        <form method="POST">
+            <label>Enter your answer:</label>
+            <input type="text" name="answer" required>
+            <button type="submit">Check Answer</button>
+        </form>
+    {% elif session.step == 'session_end' %}
+        <p>Session complete! Inputs used: {{ session.count }}</p>
+        <form method="POST" action="/continue_session" style="display:inline;">
+            <button type="submit">Continue Session</button>
+        </form>
+        <form method="POST" action="/new_session" style="display:inline;">
+            <button type="submit">New Session</button>
+        </form>
+        <br><br>
+        <a href="/download_csv">Download History</a> | 
+        <form method="POST" action="/clear_csv" style="display:inline;">
+            <button type="submit">Clear History</button>
+        </form>
+    {% endif %}
+    
+    <div class="practice-list">
+        <h3>Practice List (up to 10):</h3>
+        <ul>
+            {% for idx, eq in enumerate(practice_list) %}
+                <li><a href="/practice/{{ idx }}">{{ eq }}</a></li>
