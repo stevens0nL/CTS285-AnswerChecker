@@ -25,5 +25,5 @@ A simple Flask-based web tool to check if a user-provided math solution is corre
 - Supports basic arithmetic and simple equations (e.g., linear); complex math (e.g., calculus) may fail.
 - Only supports .txt uploads (max 1MB).
 - Solutions are approximate for floats; exact for integers.
-- Local-only; for deployment, use Gunicorn or Heroku.
+- Local-only; for deployment, use Gunicorn or Heroku. (AI told me this. Idk what it is)
 - Styling is basic; not mobile-optimized.
