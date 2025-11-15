@@ -5,10 +5,6 @@ function showModal(message) {
 
 function closeModal() {
     document.getElementById('myModal').style.display = 'none';
-    // Redirect or handle session end
-    if (document.getElementById('modal-text').innerText.includes('session')) {
-        // Assume session end logic handled by Flask
-    }
 }
 
 window.onclick = function(event) {
@@ -16,3 +12,12 @@ window.onclick = function(event) {
         closeModal();
     }
 }
+
+// Timer for practice session
+let timerInterval;
+function startTimer() {
+    let timeLeft = 15 * 60; // 15 minutes in seconds
+    timerInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').innerText = `Time left: ${minutes}:${seconds < 10 ? '0' : ''

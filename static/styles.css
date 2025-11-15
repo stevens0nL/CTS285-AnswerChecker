@@ -1,22 +1,38 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
     background-color: #f4f4f4;
+    display: flex;
 }
-form {
-    max-width: 400px;
-    margin: auto;
+
+.main-content {
+    flex: 1;
     padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
 }
-input, button, select {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
+
+.sidebar {
+    width: 200px;
+    background: #e0e0e0;
     padding: 10px;
+    border-left: 1px solid #ccc;
+    height: 100vh;
+    overflow-y: auto;
 }
+
+.section {
+    margin: 20px 0;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ccc;
+}
+
+button, input, select {
+    padding: 10px;
+    margin: 5px;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -27,6 +43,7 @@ input, button, select {
     height: 100%;
     background-color: rgba(0,0,0,0.4);
 }
+
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
@@ -34,18 +51,16 @@ input, button, select {
     border: 1px solid #888;
     width: 80%;
     max-width: 300px;
-    text-align: center;
 }
+
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
+
 .close:hover {
     color: black;
     cursor: pointer;
-}
-.practice-list {
-    margin-top: 20px;
 }

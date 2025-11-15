@@ -1,19 +1,18 @@
 This is just so I know what the hell I'm doing and where shit goes. IGNORE IT!!! >.<
 
-CTS285-AnswerChecker/
+answer_checker_project/
 ├── FRAMEWORK_DECISION.md
 ├── ITERATION_LOG.md
 ├── README.md
-├── app.py  # Main Flask app code
-├── requirements.txt  # Dependencies
+├── app.py  # Updated with practice mode, random equation generation, and timer logic
+├── requirements.txt
+├── equations_log.csv
 ├── static/
-│   └── styles.css  # Basic styling
+│   ├── styles.css  # Updated for sidebar layout
+│   └── script.js  # Updated with timer functionality
 └── templates/
-    └── index.html  # HTML template    
-
-
-
-
+    ├── index.html  # Updated for practice mode UI and sidebar
+    └── exit.html
 
 
 

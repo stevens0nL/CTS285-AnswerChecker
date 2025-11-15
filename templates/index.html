@@ -7,49 +7,153 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <h1>Math Answer Checker</h1>
+    <div class="main-content">
+        <h1>Math Answer Checker</h1>
+        
+        {% if session.step == 'select_limit' %}
+            <div class="section">
+                <h3>Select Session Limit</h3>
+                <form method="POST">
+                    <select name="limit">
+                        <option value="5">5 inputs</option>
+                        <option value="10">10 inputs</option>
+                        <option value="20">20 inputs</option>
+                    </select>
+                    <button type="submit">Start Session</button>
+                </form>
+                <form method="POST" action="/start_practice">
+                    <button type="submit">Start Practice Session</button>
+                </form>
+            </div>
+        {% elif session.step == 'input_equation' %}
+            <div class="section">
+                <h3>Session Info</h3>
+                <p>Limit: {{ session.limit }} | Inputs used: {{ session.count }}</p>
+                <form method="POST" action="/change_limit" style="display:inline;">
+                    <select name="limit">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                    </select>
+                    <button type="submit">Change Limit</button>
+                </form>
+                <form method="POST" action="/new_session" style="display:inline;">
+                    <button type="submit">Start Over</button>
+                </form>
+                <form method="POST" action="/exit" style="display:inline;">
+                    <button type="submit">Exit</button>
+                </form>
+            </div>
+            <div class="section">
+                <h3>Enter Equation</h3>
+                <form method="POST">
+                    <input type="text" name="equation" placeholder="e.g., 2+3 or x+1=3" required>
+                    <button type="submit">Submit Equation</button>
+                </form>
+                {% if session.mode == 'practice' %}
+                    <p>Submitted: {{ session.practice_equations|length }}/10</p>
+                    <form method="POST" action="/practice_start">
+                        <button type="submit">Start Practice</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% elif session.step == 'input_answer' %}
+            <div class="section">
+                <h3>Session Info</h3>
+                <p>Limit: {{ session.limit }} | Inputs used: {{ session.count }}</p>
+                <form method="POST" action="/change_limit" style="display:inline;">
+                    <select name="limit">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                    </select>
+                    <button type="submit">Change Limit</button>
+                </form>
+                <form method="POST" action="/new_session" style="display:inline;">
+                    <button type="submit">Start Over</button>
+                </form>
+                <form method="POST" action="/exit" style="display:inline;">
+                    <button type="submit">Exit</button>
+                </form>
+            </div>
+            <div class="section">
+                <h3>Enter Answer</h3>
+                <p>Equation: {{ session.equation }}</p>
+                <form method="POST">
+                    <input type="text" name="answer" placeholder="Your answer" required>
+                    <button type="submit">Check Answer</button>
+                </form>
+            </div>
+        {% elif session.step == 'practice_solve' %}
+            <div class="section">
+                <h3>Practice Session</h3>
+                <p id="timer">Time left: 15:00</p>
+                <p>Equation {{ session.practice_index + 1 }}: {{ session.practice_equations[session.practice_index] }}</p>
+                <form method="POST">
+                    <input type="text" name="answer" placeholder="Your answer" required>
+                    <button type="submit">Submit Answer</button>
+                </form>
+            </div>
+        {% elif session.step == 'practice_end' %}
+            <div class="section">
+                <h3>Practice Complete</h3>
+                <p>Correct: {{ session.practice_correct }} / {{ session.practice_equations|length }}</p>
+                <form method="POST" action="/new_session">
+                    <button type="submit">New Session</button>
+                </form>
+                <form method="POST" action="/exit">
+                    <button type="submit">Exit</button>
+                </form>
+            </div>
+        {% elif session.step == 'session_end' %}
+            <div class="section">
+                <h3>Session Complete</h3>
+                <p>Inputs used: {{ session.count }}</p>
+                <form method="POST" action="/continue_session" style="display:inline;">
+                    <button type="submit">Continue Session</button>
+                </form>
+                <form method="POST" action="/new_session" style="display:inline;">
+                    <button type="submit">New Session</button>
+                </form>
+                <form method="POST" action="/exit" style="display:inline;">
+                    <button type="submit">Exit</button>
+                </form>
+            </div>
+            <div class="section">
+                <h3>History</h3>
+                <button onclick="window.location.href='/download_csv'">Download History</button>
+                <form method="POST" action="/clear_csv" style="display:inline;">
+                    <button type="submit">Clear History</button>
+                </form>
+            </div>
+        {% endif %}
+        
+        <!-- Modal for feedback -->
+        <div id="myModal" class="modal" style="{% if show_modal %}display: block;{% endif %}">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p id="modal-text">{{ feedback }}</p>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
     
-    {% if session.step == 'select_limit' %}
-        <form method="POST">
-            <label>Select session limit:</label>
-            <select name="limit">
-                <option value="5">5 inputs</option>
-                <option value="10">10 inputs</option>
-                <option value="20">20 inputs</option>
-            </select>
-            <button type="submit">Start Session</button>
-        </form>
-    {% elif session.step == 'input_equation' %}
-        <p>Inputs used: {{ session.count }} / {{ session.limit }}</p>
-        <form method="POST">
-            <label>Enter equation:</label>
-            <input type="text" name="equation" placeholder="e.g., 2 + 3 or x + 1 = 3" required>
-            <button type="submit">Submit Equation</button>
-        </form>
-    {% elif session.step == 'input_answer' %}
-        <p>Equation: {{ session.equation }}</p>
-        <form method="POST">
-            <label>Enter your answer:</label>
-            <input type="text" name="answer" required>
-            <button type="submit">Check Answer</button>
-        </form>
-    {% elif session.step == 'session_end' %}
-        <p>Session complete! Inputs used: {{ session.count }}</p>
-        <form method="POST" action="/continue_session" style="display:inline;">
-            <button type="submit">Continue Session</button>
-        </form>
-        <form method="POST" action="/new_session" style="display:inline;">
-            <button type="submit">New Session</button>
-        </form>
-        <br><br>
-        <a href="/download_csv">Download History</a> | 
-        <form method="POST" action="/clear_csv" style="display:inline;">
-            <button type="submit">Clear History</button>
-        </form>
-    {% endif %}
-    
-    <div class="practice-list">
-        <h3>Practice List (up to 10):</h3>
+    <div class="sidebar">
+        <h3>Practice List (up to 10)</h3>
         <ul>
-            {% for idx, eq in enumerate(practice_list) %}
+            {% for idx, eq in practice_list_with_idx %}
                 <li><a href="/practice/{{ idx }}">{{ eq }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
